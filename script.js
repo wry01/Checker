@@ -1,42 +1,38 @@
-// Função para verificar um link
-async function verificarLink(link) {
-    try {
-        // Simula a verificação de link (substitua por API real, se houver)
-        const resposta = await fetch(link, { method: "GET" });
-        
-        if (resposta.ok) {
-            const plano = "Mensal"; // Ajuste para detectar o plano real
-            const expira = "31/01/2025"; // Substitua pela lógica correta
+async function checkPromoCode() {
+  const promoCode = document.getElementById('promoCode').value.trim();
+  const resultDiv = document.getElementById('result');
+  
+  if (!promoCode) {
+    resultDiv.innerHTML = '<span class="warning">Por favor, insira um código válido.</span>';
+    return;
+  }
 
-            return { status: "válido", plano, expira };
-        } else {
-            return { status: "inválido", plano: "Desconhecido", expira: "Desconhecido" };
-        }
-    } catch (erro) {
-        return { status: "erro", plano: "Desconhecido", expira: "Desconhecido" };
+  try {
+    // Exemplo fictício de verificação de código. Substitua pela sua API real.
+    const response = await fetch(`https://ptb.discord.com/api/v9/entitlements/gift-codes/${promoCode}`, {
+      method: 'GET',
+      headers: {
+        'Authorization': 'Bearer SEU_TOKEN_AQUI', // Substitua com o token
+      }
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      const expiresAt = new Date(data.expires_at);
+      const isValid = data.uses < data.max_uses;
+
+      // Formatando data de expiração
+      const formattedDate = `${expiresAt.toLocaleDateString()} ${expiresAt.toLocaleTimeString()}`;
+
+      if (isValid) {
+        resultDiv.innerHTML = `<span class="valid">https://promos.discord.gg/${promoCode} - ✅ | Valid - Expires: ${formattedDate}</span>`;
+      } else {
+        resultDiv.innerHTML = `<span class="invalid">https://promos.discord.gg/${promoCode} - ❌ | Resgatado | Expired</span>`;
+      }
+    } else {
+      resultDiv.innerHTML = `<span class="invalid">Código Inválido: ${promoCode}</span>`;
     }
+  } catch (error) {
+    resultDiv.innerHTML = `<span class="warning">Erro ao verificar o código: ${error.message}</span>`;
+  }
 }
-
-// Função para verificar múltiplos links
-async function verificarLinks() {
-    const areaDeTexto = document.getElementById("areaDeLinks").value.split("\n");
-    const resultados = document.getElementById("resultados");
-    resultados.innerHTML = "";
-
-    for (const link of areaDeTexto) {
-        if (link.trim()) {
-            const resultado = await verificarLink(link.trim());
-
-            // Adiciona o resultado ao HTML
-            resultados.innerHTML += `
-                <div style="margin-bottom: 10px;">
-                    <p><strong>Link:</strong> ${link}</p>
-                    <p><strong>Status:</strong> ${resultado.status}</p>
-                    <p><strong>Plano:</strong> ${resultado.plano}</p>
-                    <p><strong>Expira:</strong> ${resultado.expira}</p>
-                    <hr>
-                </div>
-            `;
-        }
-    }
-              }
