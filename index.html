@@ -1,18 +1,46 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Link Checker</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Promo Code Checker</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f0f0f0;
+      padding: 20px;
+      text-align: center;
+    }
+    input, button {
+      padding: 10px;
+      margin: 10px;
+      font-size: 16px;
+    }
+    #result {
+      margin-top: 20px;
+      font-size: 18px;
+      font-weight: bold;
+    }
+    .valid {
+      color: green;
+    }
+    .invalid {
+      color: red;
+    }
+    .warning {
+      color: orange;
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Link Checker</h1>
-        <textarea id="areaDeLinks" placeholder="Cole os links aqui (um por linha)"></textarea>
-        <button onclick="verificarLinks()">Verificar Links</button>
-        <div id="resultados"></div>
-    </div>
-    <script src="script.js"></script>
+  <h1>Promo Code Checker</h1>
+  <p>Digite o código promocional para verificar:</p>
+  
+  <input type="text" id="promoCode" placeholder="Digite o código">
+  <button onclick="checkPromoCode()">Verificar</button>
+  
+  <div id="result"></div>
+
+  <script src="script.js"></script>
 </body>
 </html>
