@@ -1,20 +1,42 @@
-document.getElementById('checkButton').addEventListener('click', async () => {
-  const promoLink = document.getElementById('promoLink').value.trim();
-  const resultDiv = document.getElementById('result');
+// Função para verificar um link
+async function verificarLink(link) {
+    try {
+        // Simula a verificação de link (substitua por API real, se houver)
+        const resposta = await fetch(link, { method: "GET" });
+        
+        if (resposta.ok) {
+            const plano = "Mensal"; // Ajuste para detectar o plano real
+            const expira = "31/01/2025"; // Substitua pela lógica correta
 
-  if (!promoLink) {
-    resultDiv.textContent = 'Por favor, insira um link.';
-    return;
-  }
-
-  resultDiv.textContent = 'Verificando...';
-
-  // Simulação de verificação
-  setTimeout(() => {
-    if (promoLink.includes("discord")) {
-      resultDiv.textContent = '✅ Link válido para verificação!';
-    } else {
-      resultDiv.textContent = '❌ Link inválido.';
+            return { status: "válido", plano, expira };
+        } else {
+            return { status: "inválido", plano: "Desconhecido", expira: "Desconhecido" };
+        }
+    } catch (erro) {
+        return { status: "erro", plano: "Desconhecido", expira: "Desconhecido" };
     }
-  }, 2000);
-});
+}
+
+// Função para verificar múltiplos links
+async function verificarLinks() {
+    const areaDeTexto = document.getElementById("areaDeLinks").value.split("\n");
+    const resultados = document.getElementById("resultados");
+    resultados.innerHTML = "";
+
+    for (const link of areaDeTexto) {
+        if (link.trim()) {
+            const resultado = await verificarLink(link.trim());
+
+            // Adiciona o resultado ao HTML
+            resultados.innerHTML += `
+                <div style="margin-bottom: 10px;">
+                    <p><strong>Link:</strong> ${link}</p>
+                    <p><strong>Status:</strong> ${resultado.status}</p>
+                    <p><strong>Plano:</strong> ${resultado.plano}</p>
+                    <p><strong>Expira:</strong> ${resultado.expira}</p>
+                    <hr>
+                </div>
+            `;
+        }
+    }
+              }
